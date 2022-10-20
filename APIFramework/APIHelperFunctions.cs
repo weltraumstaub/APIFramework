@@ -8,13 +8,13 @@ using System.Threading.Tasks;
 
 namespace APIFramework
 {
-    public class APIHelperFunctions
+    public class APIHelperFunctions<T>
     {
         public RestClient client;
         public RestRequest request;
         public string baseUrl = "https://reqres.in/";
 
-        public RestClient SetUrl(string baseUrl, string path)
+        public RestClient SetUrl(string path)
         {
             var url = Path.Combine(baseUrl, path);
             var client = new RestClient(url);
@@ -37,7 +37,7 @@ namespace APIFramework
             return request;
         }
 
-        public RestRequest CreatePostRequest<T>(string payload)
+        public RestRequest CreatePostRequest(string payload)
         {
             var request = new RestRequest()
             {

@@ -4,23 +4,29 @@ using APIFramework.Models;
 
 namespace APIFramework
 {
-    public class APISetup
+    public class APISetup<T>
     {
-        public ListOfUsersDTO GetUsers()
+        public ListOfUsersDTO GetUsers(string path)
         {
-            var client = new RestClient("https://reqres.in/");
-            var request = new RestRequest("/api/users?page=2", Method.Get)
-                                        .AddHeader("Content-Type", "application/json");
-            request.RequestFormat = DataFormat.Json;
+            var user = new APIHelperFunctions<ListOfUsersDTO>();
+            var url = user.SetUrl(path);
+            var request = user.CreateGetRequest();
+            var response = user.GetResponse(url, request);
+            ListOfUsersDTO content = user.GetContent<ListOfUsersDTO>(response);
+            return content;
 
-            var response = client.Get(request);
-            var content = response.Content;
-
-            var users = JsonConvert.DeserializeObject<ListOfUsersDTO>(content);
-            return users;
 
         }
 
-        
+        public PostUserDTO CreateUserObject(string path, dynamic payload)
+        {
+            var user = new APIHelperFunctions<PostUserDTO>();
+            var url = user.SetUrl(path);
+            var request = user.CreatePostRequest(payload);
+            var response = user.GetResponse(url, request);
+            PostUserDTO content = user.GetContent<PostUserDTO>(response);
+            return content;
+        }
+
     }
 }
