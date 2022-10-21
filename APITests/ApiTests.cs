@@ -1,5 +1,6 @@
 using APIFramework;
 using APIFramework.Models;
+using APITests.TestingData;
 using AventStack.ExtentReports;
 using NUnit.Framework.Interfaces;
 
@@ -8,7 +9,7 @@ namespace APITests
     [TestFixture]
     public class Tests
     {
-        public TestContext TestContext { get; set; }
+      /*  public TestContext TestContext { get; set; }
 
         [OneTimeSetUp]
         public static void SetupReport(TestContext testContext)
@@ -57,37 +58,41 @@ namespace APITests
         {
             ReporterSetup.FlushReport();
         }
-
+*/
+        
         [Test]
         public void VerifyListOfRetrievedUsers()
         {
             var apiSetup = new APISetup<ListOfUsersDTO>();
             var response = apiSetup.GetUsers("api/users?page=2");
 
+            Assume.That(response, Is.Not.Null);
+
             Assert.Multiple(() =>
             {
-                Assert.That(response, Is.Not.Null);
                 Assert.That(response.page, Is.EqualTo(2));
                 Assert.That(actual: response.data[0].first_name, Is.EqualTo("Michael"));
             });
-            ReporterSetup.LogTestResult(Status.Pass, "The Test is Successfull");
+            // ReporterSetup.LogTestResult(Status.Pass, "The Test is Successfull");
         }
 
-        [Test]
-        public void TestNewUserCreation()
+        [TestCaseSource(typeof(TestDataConfig), nameof(TestDataConfig.PostUsersTestData))]
+        public void TestNewUserCreation(string userName, string jobTitle)
         {
-            var payload = @"{
-                            ""name"": ""Daphna"",
-                            ""job"": ""Data Analyst""
-                            }";
+
+            var payloadObject = new CreateUserRequestDTO
+            {
+                Name = userName,
+                Job = jobTitle
+            };
 
             var apiSetup = new APISetup<PostUserDTO>();
-            var response = apiSetup.CreateUserObject("api/users", payload);
+            var response = apiSetup.CreateUserObject("api/users", payloadObject);
 
-
+            Assume.That(response, Is.Not.Empty);
             Assert.Multiple(() =>
-            {   Assert.That(response.name, Is.EqualTo("Daphna"));
-                Assert.That(response.job, Is.EqualTo("Data Analyst"));
+            {   Assert.That(response.name, Is.EqualTo(userName));
+                Assert.That(response.job, Is.EqualTo(jobTitle));
             });
         }
     }

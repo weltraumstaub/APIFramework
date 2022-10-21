@@ -81,12 +81,20 @@ namespace APIFramework
         {
             var content = response.Content;
             DTO dtoObject = JsonConvert.DeserializeObject<DTO>(content);
+            
             return dtoObject;
         }
 
         public async Task<RestResponse> GetResponseAsync(RestClient restClient, RestRequest restRequest)
         {
             return await restClient.ExecuteAsync(restRequest);
+        }
+
+        public string SerializeToJson(dynamic stringContent)
+        {
+            string serializeObject = JsonConvert.SerializeObject(stringContent, Formatting.Indented);
+            
+            return serializeObject;
         }
     }
 }
