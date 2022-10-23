@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace APIFramework
 {
-    public class APIHelperFunctions<T>
+    public class APIHelperFunctions
     {
         public RestClient client;
         public RestRequest request;
@@ -49,7 +49,7 @@ namespace APIFramework
             return request;
         }
 
-        public RestRequest CreatePullRequest<T>(string payload)
+        public RestRequest CreatePutRequest(string payload)
         {
             var request = new RestRequest()
             {
@@ -58,6 +58,18 @@ namespace APIFramework
             request.AddHeader("Content-Type", "application/json")
                    .AddJsonBody(payload);
             
+            return request;
+        }
+
+        public RestRequest CreatePatchRequest(string payload)
+        {
+            var request = new RestRequest()
+            {
+                Method = Method.Patch
+            };
+            request.AddHeader("Content-Type", "application/json")
+                   .AddJsonBody(payload);
+
             return request;
         }
 
